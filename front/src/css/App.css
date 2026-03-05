@@ -1,0 +1,131 @@
+:root {
+  --bg-deep: #020617;      /* Azul casi negro, mucho mejor que el gris */
+  --bg-gradient: #0f172a;  /* Azul medianoche para el degradado */
+  --card-bg: #1e293b;      /* Color de la tarjeta */
+  --sun-gold: #fbbf24;     /* Tu amarillo solar */
+  --sun-glow: rgba(251, 191, 36, 0.4);
+  --text-primary: #f8fafc;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  /* Fondo con degradado para eliminar el gris plano */
+  background: radial-gradient(circle at top right, var(--bg-gradient), var(--bg-deep));
+  color: var(--text-primary);
+  font-family: 'Inter', system-ui, sans-serif;
+  min-height: 100vh;
+}
+
+header {
+  background-color: rgba(2, 6, 23, 0.8);
+  backdrop-filter: blur(12px);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 5%;
+  height: 75px;
+  position: fixed;
+  top: 0;
+  width: 100%;
+  z-index: 1000;
+  border-bottom: 1px solid rgba(251, 191, 36, 0.2);
+}
+
+/* ARREGLO DE BOTONES EN LINEA Y SIN PUNTOS */
+.nav-links {
+  display: flex;      /* Los pone uno al lado del otro */
+  list-style: none;   /* QUITA LOS PUNTOS DE LISTA */
+  gap: 15px;          /* Espacio entre botones */
+  align-items: center;
+}
+
+header button {
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border: 1px solid var(--sun-gold);
+}
+
+/* Botón Iniciar Sesión (Estilo contorno) */
+.nav-links li:first-child button {
+  background: transparent;
+  color: var(--sun-gold);
+}
+
+/* Botón Registrarse (Estilo sólido) */
+.nav-links li:last-child button {
+  background: var(--sun-gold);
+  color: var(--bg-deep);
+}
+
+header button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 0 15px var(--sun-glow);
+}
+
+/* Título y Formulario */
+h2 {
+  margin-top: 130px;
+  text-align: center;
+  font-size: 2.8rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  
+  /* 1. Definimos el degradado de color */
+  background: linear-gradient(to right, #ffffff, var(--sun-gold));
+
+  /* 2. El truco de "Webkit" para que el color solo esté en las letras */
+  -webkit-background-clip: text; /* Corta el fondo con la forma de las letras */
+  background-clip: text;         /* Versión estándar */
+  
+  /* 3. Hacemos que el color original de la letra sea transparente */
+  -webkit-text-fill-color: transparent; 
+  color: transparent;            /* Fallback */
+  
+  /* 4. Un brillo suave para que parezca energía */
+  filter: drop-shadow(0 0 10px rgba(251, 191, 36, 0.3));
+}
+.formulario {
+  background-color: var(--card-bg);
+  max-width: 500px;
+  margin: 40px auto;
+  padding: 40px;
+  border-radius: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+input, select {
+  background-color: #020617;
+  border: 1px solid #334155;
+  padding: 12px;
+  border-radius: 8px;
+  color: white;
+  outline: none;
+}
+
+input:focus {
+  border-color: var(--sun-gold);
+  box-shadow: 0 0 8px var(--sun-glow);
+}
+
+.formulario button {
+  background-color: var(--sun-gold);
+  color: var(--bg-deep);
+  padding: 15px;
+  border: none;
+  border-radius: 8px;
+  font-weight: 800;
+  margin-top: 10px;
+  cursor: pointer;
+}
