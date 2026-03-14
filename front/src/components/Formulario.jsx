@@ -1,92 +1,81 @@
-import React from 'react'
-import { useState } from 'react'
+import React, { useState } from 'react';
 
-
-function Formulario() {
- const [datos, setDatos] = useState({
+function Formulario({ lat, lon, onDataReceived }) {
+  const [datos, setDatos] = useState({
     orientacion: 'Sur',
     inclinacion: '30',
     gastoMensual: '',
-    prioridad: 'N-Type'
+    estacion: 'Primavera',
+    numPaneles: '6'
   });
 
+  const [cargando, setCargando] = useState(false);
+
   const handleChange = (e) => {
-    setDatos({
-      ...datos,
-      [e.target.name]: e.target.value
-    });
+    setDatos({ ...datos, [e.target.name]: e.target.value });
   };
 
-  const manejarCalculo = (e) => {
+  const enviarAlBack = async (e) => {
     e.preventDefault();
-    
-    console.log("Enviando datos al modelo:", datos);
+    setCargando(true);
+
+    try {
+      const response = await fetch('http://localhost:3000/api/calcular-solar', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ 
+          lat, 
+          lon, 
+          formUser: datos 
+        })
+      });
+
+      if (!response.ok) throw new Error("Error en el servidor");
+
+      const resData = await response.json();
+      onDataReceived(resData, datos.gastoMensual);
+
+    } catch (err) {
+      alert("Error al conectar con la IA de predicción");
+    } finally {
+      setCargando(false);
+    }
   };
 
   return (
-    <div className="asesoramiento-container">
-      <h2>Configura tu Instalación</h2>
-      <form onSubmit={manejarCalculo} className="asesoramiento">
-        
-       
-        <div className="input-group">
-          <label>¿Hacia dónde apunta tu tejado?</label>
-          <select name="orientacion" value={datos.orientacion} onChange={handleChange}>
-            <option value="Sur">Sur (Máxima producción)</option>
-            <option value="Sureste">Sureste (-45°)</option>
-            <option value="Suroeste">Suroeste (+45°)</option>
-            <option value="Este">Este (-90°)</option>
-            <option value="Oeste">Oeste (+90°)</option>
-          </select>
-        </div>
-
-        
-        <div className="input-group">
-          <label>Inclinación del tejado</label>
-          <select name="inclinacion" value={datos.inclinacion} onChange={handleChange}>
-            <option value="0">Plano (0°)</option>
-            <option value="15">Poca inclinación (15°)</option>
-            <option value="30">Estándar (30°)</option>
-            <option value="45">Mucha inclinación (45°)</option>
-          </select>
-        </div>
-
-        
-        <div className="input-group">
-          <label>Gasto promedio mensual de luz (€)</label>
-          <input 
-            type="number" 
-            name="gastoMensual" 
-            placeholder="Ej: 120" 
-            value={datos.gastoMensual} 
-            onChange={handleChange}
-            required 
-          />
-        </div>
-
-        
-        <div className="input-group">
-          <label>Tipo de tecnología preferida</label>
-          <div className="radio-group">
-            <label>
-              <input type="radio" name="prioridad" value="PERC" onChange={handleChange} /> 
-              Económica (PERC)
-            </label>
-            <label>
-              <input type="radio" name="prioridad" value="N-Type" defaultChecked onChange={handleChange} /> 
-              Equilibrada (N-Type)
-            </label>
-            <label>
-              <input type="radio" name="prioridad" value="HJT" onChange={handleChange} /> 
-              Alta Eficiencia (HJT)
-            </label>
+    <div style={{ background: '#1e293b', padding: '30px', borderRadius: '20px', border: '1px solid #334155' }}>
+      <form onSubmit={enviarAlBack}>
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px' }}>
+          <div className="input-group">
+            <label style={{ color: '#94a3b8', fontSize: '0.8rem' }}>Num. de Paneles</label>
+            <input type="number" name="numPaneles" value={datos.numPaneles} onChange={handleChange} style={inputStyle} />
+          </div>
+          <div className="input-group">
+            <label style={{ color: '#94a3b8', fontSize: '0.8rem' }}>Inclinación (°)</label>
+            <input type="number" name="inclinacion" value={datos.inclinacion} onChange={handleChange} style={inputStyle} />
+          </div>
+          <div className="input-group">
+            <label style={{ color: '#94a3b8', fontSize: '0.8rem' }}>Orientación</label>
+            <select name="orientacion" value={datos.orientacion} onChange={handleChange} style={inputStyle}>
+              <option value="Sur">Sur</option>
+              <option value="Este">Este</option>
+              <option value="Oeste">Oeste</option>
+            </select>
+          </div>
+          <div className="input-group">
+            <label style={{ color: '#fbbf24', fontSize: '0.8rem', fontWeight: 'bold' }}>Gasto Luz (€)</label>
+            <input type="number" name="gastoMensual" value={datos.gastoMensual} onChange={handleChange} required style={{...inputStyle, border: '1px solid #fbbf24'}} />
           </div>
         </div>
-
-        <button type="submit" className="btn-calcular">Realizar Diagnóstico</button>
+        <button type="submit" disabled={cargando} style={buttonStyle}>
+          {cargando ? '⌛ CALCULANDO...' : '🚀 OBTENER RESULTADO'}
+        </button>
       </form>
     </div>
   );
-};
+}
+
+const inputStyle = { width: '100%', padding: '12px', borderRadius: '8px', border: '1px solid #334155', background: '#0f172a', color: 'white', marginTop: '5px' };
+const buttonStyle = { width: '100%', marginTop: '30px', padding: '15px', borderRadius: '10px', background: '#fbbf24', color: '#0f172a', fontWeight: 'bold', border: 'none', cursor: 'pointer' };
 
 export default Formulario;

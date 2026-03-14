@@ -1,0 +1,17 @@
+# JavaScript / Frontend
+node_modules/
+dist/
+build/
+.env
+
+# Python / Backend
+__pycache__/
+*.py[cod]
+*$py.class
+venv/
+.venv/
+env/
+
+# Sistema
+.DS_Store
+Thumbs.db
