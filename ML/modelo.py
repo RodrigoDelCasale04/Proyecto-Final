@@ -6,6 +6,8 @@ from sklearn.metrics import mean_absolute_error
 import joblib
 import os
 
+# pip install scikit-learn joblib pandas fastapi uvicorn
+
 # Entrenamiento de donde sace el csv https://re.jrc.ec.europa.eu/pvg_tools/en/#api_5.3
 # ==========================================
 # 1. CONFIGURACIÓN DE RUTA (DIRECTO A DOWNLOADS)

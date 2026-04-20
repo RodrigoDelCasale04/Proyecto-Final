@@ -11,9 +11,12 @@
   },
   "dependencies": {
     "@react-google-maps/api": "^2.20.8",
+    "axios": "^1.15.1",
+    "framer-motion": "^12.38.0",
     "geolib": "^3.3.4",
     "leaflet": "^1.9.4",
     "leaflet-draw": "^1.0.4",
+    "lucide-react": "^1.8.0",
     "react": "^19.1.1",
     "react-dom": "^19.1.1",
     "react-leaflet": "^5.0.0",

@@ -1,15 +1,32 @@
 import React from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, Link } from 'react-router-dom'
 
 function PaginaPrincipal() {
   const navigate = useNavigate()
   return (
     <header className="header">
-      <div className="logo" style={{ color: '#fbbf24', fontWeight: 'bold', fontSize: '1.2rem' }}>SOLAR IA</div>
+      <div 
+        className="logo" 
+        onClick={() => navigate("/")}
+        style={{ color: '#fbbf24', fontWeight: '800', fontSize: '1.5rem', cursor: 'pointer' }}
+      >
+        SOLAR IA
+      </div>
+      
       <nav>
         <ul className="nav-links">
-          <li><button onClick={() => navigate("/login")}>Login</button></li>
-          <li><button onClick={() => navigate("/register")}>Registro</button></li>
+          <li><Link to="/" className="nav-item-link">Inicio</Link></li>
+          <li><Link to="/calculadora" className="nav-item-link">Calculadora</Link></li>
+          <li>
+            <button className="btn-login" onClick={() => navigate("/login")}>
+              Login
+            </button>
+          </li>
+          <li>
+            <button className="btn-register" onClick={() => navigate("/register")}>
+              Registro
+            </button>
+          </li>
         </ul>
       </nav>
     </header>

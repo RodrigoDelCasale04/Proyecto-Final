@@ -1,11 +1,12 @@
-
 :root {
-  --bg-deep: #020617;      /* Azul casi negro, mucho mejor que el gris */
-  --bg-gradient: #0f172a;  /* Azul medianoche para el degradado */
-  --card-bg: #1e293b;      /* Color de la tarjeta */
-  --sun-gold: #fbbf24;     /* Tu amarillo solar */
+  /* Paleta de colores unificada y premium */
+  --bg-deep: #020617;       /* Azul casi negro para la base */
+  --bg-gradient: #0f172a;   /* Azul medianoche para el degradado */
+  --card-bg: rgba(30, 41, 59, 0.7); /* Transparencia para efecto glass */
+  --sun-gold: #fbbf24;      /* Tu amarillo solar */
   --sun-glow: rgba(251, 191, 36, 0.4);
   --text-primary: #f8fafc;
+  --text-muted: #94a3b8;
 }
 
 * {
@@ -14,128 +15,182 @@
   box-sizing: border-box;
 }
 
+/* --- ESTO ARREGLA EL BLOQUE GRIS --- */
+html, body {
+  height: 100%; /* Forzamos altura total al HTML y BODY */
+}
+
 body {
-  /* Fondo con degradado para eliminar el gris plano */
-  background: radial-gradient(circle at top right, var(--bg-gradient), var(--bg-deep));
+  /* Fondo con degradado radial que ahora sí ocupará todo el espacio */
+  background: radial-gradient(circle at top right, var(--bg-gradient), var(--bg-deep)) no-repeat center center fixed;
+  background-size: cover; /* Asegura que el degradado cubra todo */
   color: var(--text-primary);
-  font-family: 'Inter', system-ui, sans-serif;
-  min-height: 100vh;
+  font-family: 'Poppins', sans-serif; /* Usamos la fuente Poppins que está en tu link */
+  display: flex;
+  flex-direction: column;
 }
 
+/* Contenedor principal para las rutas */
+.min-h-screen {
+  flex: 1; /* Ocupa todo el espacio disponible empujando el footer si lo hubiera */
+  display: flex;
+  flex-direction: column;
+}
+
+/* --- HEADER PREMIUM (GLASSMORPHISM) --- */
 .header {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    z-index: 1000; /* Para que siempre esté arriba */
-    background-color: #1e293b; /* Fondo sólido para que no se transparente el texto de abajo */
-    height: 70px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 0 50px;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+  position: fixed;
+  top: 0;
+  width: 100%;
+  z-index: 1000;
+  background: rgba(15, 23, 42, 0.8); /* Fondo semitransparente */
+  backdrop-filter: blur(12px);      /* Efecto de desenfoque */
+  height: 80px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 10%; /* Más aire a los costados */
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05); /* Línea sutil */
 }
 
-.main-content {
-    margin-top: 20px; /* Espacio extra para seguridad */
-}
-
-/* Ajuste para que el mapa no tape menús desplegables si los hubiera */
-.leaflet-container {
-    z-index: 1 !important;
-}
-
-/* ARREGLO DE BOTONES EN LINEA Y SIN PUNTOS */
 .nav-links {
-  display: flex;      /* Los pone uno al lado del otro */
-  list-style: none;   /* QUITA LOS PUNTOS DE LISTA */
-  gap: 15px;          /* Espacio entre botones */
+  display: flex;
+  list-style: none;
+  gap: 25px; /* Más espacio entre enlaces */
   align-items: center;
 }
 
-header button {
-  padding: 10px 20px;
-  border-radius: 8px;
-  font-weight: 700;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  border: 1px solid var(--sun-gold);
+/* Enlaces de navegación (Inicio, Calculadora) */
+.nav-item-link {
+  color: var(--text-primary);
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.3s ease;
 }
 
-/* Botón Iniciar Sesión (Estilo contorno) */
-.nav-links li:first-child button {
-  background: transparent;
+.nav-item-link:hover {
   color: var(--sun-gold);
 }
 
-/* Botón Registrarse (Estilo sólido) */
-.nav-links li:last-child button {
+/* Botón Login (Estilo contorno) */
+.btn-login {
+  background: transparent;
+  color: var(--sun-gold);
+  border: 1px solid var(--sun-gold);
+  padding: 10px 25px;
+  border-radius: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+/* Botón Registro (Estilo sólido) */
+.btn-register {
   background: var(--sun-gold);
   color: var(--bg-deep);
+  border: none;
+  padding: 12px 28px;
+  border-radius: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.3s ease;
 }
 
-header button:hover {
+.btn-login:hover, .btn-register:hover {
   transform: translateY(-2px);
-  box-shadow: 0 0 15px var(--sun-glow);
+  box-shadow: 0 0 20px var(--sun-glow);
 }
 
-/* Título y Formulario */
+/* --- TÍTULOS Y FORMULARIOS (ESTILO PREMIUM) --- */
 h2 {
-  margin-top: 130px;
+  margin-top: 130px; /* Espacio para el header fijo */
   text-align: center;
-  font-size: 2.8rem;
+  font-size: 3rem;
   font-weight: 800;
   text-transform: uppercase;
   
-  /* 1. Definimos el degradado de color */
-  background: linear-gradient(to right, #ffffff, var(--sun-gold));
-
-  /* 2. El truco de "Webkit" para que el color solo esté en las letras */
-  -webkit-background-clip: text; /* Corta el fondo con la forma de las letras */
-  background-clip: text;         /* Versión estándar */
+  /* Degradado sutil en el texto */
+  background: linear-gradient(to bottom, #ffffff, var(--sun-gold));
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
   
-  /* 3. Hacemos que el color original de la letra sea transparente */
-  -webkit-text-fill-color: transparent; 
-  color: transparent;            /* Fallback */
-  
-  /* 4. Un brillo suave para que parezca energía */
-  filter: drop-shadow(0 0 10px rgba(251, 191, 36, 0.3));
+  /* Brillo suave de energía */
+  filter: drop-shadow(0 0 15px rgba(251, 191, 36, 0.2));
+  margin-bottom: 20px;
 }
+
+/* Tarjeta del Formulario (Glassmorphism) */
 .formulario {
-  background-color: var(--card-bg);
-  max-width: 500px;
-  margin: 40px auto;
+  background: var(--card-bg);
+  backdrop-filter: blur(10px); /* Desenfoque detrás de la tarjeta */
+  max-width: 450px; /* Un poco más angosto para que se vea más estilizado */
+  margin: 20px auto 40px; /* Centrado y con aire abajo */
   padding: 40px;
-  border-radius: 20px;
+  border-radius: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px; /* Espacio uniforme entre elementos */
+  
+  /* Sombra profunda para dar volumen */
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+  border: 1px solid rgba(255, 255, 255, 0.1); /* Borde sutil */
+}
+
+/* Contenedor interno para agrupar inputs y botones */
+.form-container {
   display: flex;
   flex-direction: column;
   gap: 15px;
-  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7);
-  border: 1px solid rgba(255, 255, 255, 0.05);
 }
 
-input, select {
-  background-color: #020617;
+input {
+  background: rgba(2, 6, 23, 0.8); /* Fondo input más oscuro */
   border: 1px solid #334155;
-  padding: 12px;
-  border-radius: 8px;
+  padding: 14px;
+  border-radius: 12px;
   color: white;
-  outline: none;
+  font-size: 1rem;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
 }
 
 input:focus {
   border-color: var(--sun-gold);
-  box-shadow: 0 0 8px var(--sun-glow);
+  box-shadow: 0 0 10px var(--sun-glow);
+  outline: none;
 }
 
-.formulario button {
-  background-color: var(--sun-gold);
+/* Botón principal del formulario */
+.btn-submit {
+  background: var(--sun-gold);
   color: var(--bg-deep);
-  padding: 15px;
+  padding: 16px;
   border: none;
-  border-radius: 8px;
+  border-radius: 12px;
   font-weight: 800;
+  font-size: 1rem;
+  cursor: pointer;
+  margin-top: 10px;
+  transition: all 0.3s ease;
+}
+
+.btn-submit:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 20px rgba(251, 191, 36, 0.2);
+}
+
+/* Botón secundario (¿No tienes cuenta?) */
+.btn-secondary {
+  background: transparent;
+  color: var(--text-muted);
+  border: none;
   margin-top: 10px;
   cursor: pointer;
+  font-size: 0.9rem;
+  text-decoration: underline; /* Subrayado sutil */
+  transition: color 0.3s ease;
+}
+
+.btn-secondary:hover {
+  color: var(--sun-gold);
 }
