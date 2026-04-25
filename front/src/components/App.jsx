@@ -5,12 +5,15 @@ import axios from "axios";
 
 // Componentes
 import PaginaPrincipal from "./PaginaPrincipal"; 
-import Home from "./Home";                       
-import Info from "./Info";                       
-import Formulario from "./Formulario";           
-import ResultadoSolar from "./ResultadoSolar";   
+import Home from "./Home"; 
+import Info from "./Info"; 
+import Formulario from "./Formulario";  
+import ResultadoSolar from "./ResultadoSolar"; 
 import Login from "./Login";
 import Register from "./Register";
+import Perfil from "./Perfil";
+import ListaInstaladores from "./ListaInstaladores";
+import Catalogo from "./Catalogo"; // IMPORTANTE: Crea este archivo con el código anterior
 
 // Lógica de ingeniería
 import { procesarSimulacion } from "../utils/engine";
@@ -32,33 +35,38 @@ function App() {
   }, []);
 
   // FUNCIÓN PRINCIPAL DE CONEXIÓN
- const handleFinalData = async (formData) => {
+  const handleFinalData = async (formData) => {
     setCargando(true);
     try {
+      // 1. Obtenemos la recomendación de ingeniería local (incluye el objeto panel completo)
       const resIngenieria = procesarSimulacion(formData);
 
-      // Enviamos el objeto con las claves exactas que el Backend desestructura
+      // 2. Consultamos al Backend para datos climáticos/ahorro
       const response = await axios.post("http://localhost:3000/api/calcular-solar", {
         lat: coords.lat,
         lon: coords.lon,
         formUser: {
           gastoMensual: formData.gasto,
-          cantidadPaneles: resIngenieria.cantidad, // Coincide con el Backend
-          wattsPanel: resIngenieria.panel.watts     // Coincide con el Backend
+          cantidadPaneles: resIngenieria.cantidad,
+          wattsPanel: resIngenieria.panel.watts
         }
       });
 
+      // 3. CONSTRUCCIÓN DEL OBJETO FINAL
+      // Combinamos la respuesta del servidor con los links y datos técnicos del motor local
       const dataFinal = {
-        ...response.data,
-        areaOcupada: resIngenieria.areaOcupada,
+        ...response.data,                // Trae 'comparativa', 'gastoOriginal', etc.
+        ...resIngenieria.panel,          // Trae 'link_compra', 'ficha_tecnica', 'garantia', etc.
         panelNombre: resIngenieria.panel.nombre,
-        cantidad: resIngenieria.cantidad
+        costoPanelUnitario: resIngenieria.panel.costo_panel_eur,
+        cantidad: resIngenieria.cantidad,
+        areaOcupada: resIngenieria.areaOcupada
       };
 
       setResultadoIA(dataFinal);
     } catch (error) {
       console.error("Error detallado:", error.response?.data || error.message);
-      alert("Error en el servidor de IA. Revisa la consola del Backend.");
+      alert("Error en el servidor de IA. Revisa la consola.");
     } finally {
       setCargando(false);
     }
@@ -68,9 +76,11 @@ function App() {
     <div className="min-h-screen" style={{ backgroundColor: '#0f172a', color: 'white' }}>
       <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
       
+      {/* El componente Nav/Header suele estar en PaginaPrincipal */}
       <PaginaPrincipal />
 
       <Routes>
+        {/* RUTA HOME */}
         <Route path="/" element={
           <div style={{ paddingTop: '100px' }}>
             <Home /> 
@@ -78,6 +88,7 @@ function App() {
           </div>
         } />
 
+        {/* RUTA CALCULADORA */}
         <Route path="/calculadora" element={
           <div className="main-content" style={{ paddingTop: '110px', paddingBottom: '50px' }}>
             <div style={{ maxWidth: '700px', margin: '0 auto', padding: '20px' }}>
@@ -110,9 +121,24 @@ function App() {
             </div>
           </div>
         } />
+
+        {/* RUTA CATÁLOGO (NUEVA) */}
+        <Route path="/catalogo" element={
+          <div style={{ paddingTop: '110px', paddingBottom: '50px' }}>
+            <Catalogo />
+          </div>
+        } />
+
+        {/* OTRAS RUTAS */}
+        <Route path="/perfil" element={
+          <div className="main-content" style={{ paddingTop: '110px', paddingBottom: '50px' }}>
+            <Perfil />
+          </div>
+        } />
         
         <Route path="/register" element={<Register />} />
         <Route path="/login" element={<Login />} />
+        <Route path="/instaladores" element={<ListaInstaladores />} />
       </Routes>
     </div>
   );

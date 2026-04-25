@@ -17,6 +17,9 @@ function PaginaPrincipal() {
         <ul className="nav-links">
           <li><Link to="/" className="nav-item-link">Inicio</Link></li>
           <li><Link to="/calculadora" className="nav-item-link">Calculadora</Link></li>
+          {/* NUEVO LINK AL CATÁLOGO */}
+          <li><Link to="/catalogo" className="nav-item-link">Paneles</Link></li>
+          <li><Link to="/perfil" className="nav-item-link">Perfil</Link></li>
           <li>
             <button className="btn-login" onClick={() => navigate("/login")}>
               Login
@@ -32,4 +35,5 @@ function PaginaPrincipal() {
     </header>
   )
 }
+
 export default PaginaPrincipal;
